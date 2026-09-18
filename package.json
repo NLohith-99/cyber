@@ -1,0 +1,16 @@
+{
+  "name": "ai-phishing-detector",
+  "version": "1.0.0",
+  "description": "AI-assisted phishing URL detector: instant heuristic checks + Claude-powered deep analysis",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1"
+  }
+}
