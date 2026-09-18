@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Link Scan — phishing URL analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scanner">
+    <header class="scanner__header">
+      <h1>Link Scan</h1>
+      <p>Paste a URL. Get an instant structural check, then a reasoned read from Claude.</p>
+    </header>
+    <form class="scanner__form" id="scan-form">
+      <input type="text" id="url-input" placeholder="https://example.com/reset-password" autocomplete="off" spellcheck="false" required />
+      <button type="submit" id="scan-btn">Scan</button>
+    </form>
+    <div class="scanner__status" id="status" aria-live="polite"></div>
+    <section class="results" id="results" hidden>
+      <div class="results__block" id="heuristic-block">
+        <h2>Structural check</h2>
+        <div class="readout" id="heuristic-readout"></div>
+      </div>
+      <div class="results__block" id="ai-block" hidden>
+        <h2>Claude's read</h2>
+        <div class="verdict" id="verdict-card">
+          <div class="verdict__level" id="verdict-level"></div>
+          <p class="verdict__reasoning" id="verdict-reasoning"></p>
+          <p class="verdict__recommendation" id="verdict-recommendation"></p>
+        </div>
+      </div>
+    </section>
+    <section class="history" id="history" hidden>
+      <h2>Recent scans</h2>
+      <ul id="history-list"></ul>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
