@@ -18,9 +18,11 @@ function renderHeuristics(h) {
     heuristicReadout.innerHTML = `<div class="flag">${h.flags[0]}</div>`;
     return;
   }
+
   const flagsHtml = h.flags.length
     ? h.flags.map((f) => `<div class="flag">${f}</div>`).join("")
     : `<div class="clean">No structural red flags found</div>`;
+
   heuristicReadout.innerHTML = `
     ${flagsHtml}
     <div class="score-row">
@@ -43,6 +45,7 @@ function renderAi(ai, fallbackError) {
     aiBlock.hidden = true;
     return;
   }
+
   aiBlock.hidden = false;
   const level = ["low", "medium", "high"].includes(ai.riskLevel) ? ai.riskLevel : "unknown";
   verdictLevel.textContent = level + " risk";
@@ -58,22 +61,29 @@ function riskColorVar(level) {
 function addToHistory(url, level) {
   history.unshift({ url, level });
   if (history.length > 6) history.pop();
+
   historySection.hidden = false;
-  historyList.innerHTML = history.map((item) => `
+  historyList.innerHTML = history
+    .map(
+      (item) => `
       <li>
         <span class="dot" style="background:${riskColorVar(item.level)}"></span>
         <span class="url">${item.url}</span>
-      </li>`).join("");
+      </li>`
+    )
+    .join("");
 }
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const url = input.value.trim();
   if (!url) return;
+
   scanBtn.disabled = true;
   status.textContent = "Running structural checks and asking Claude…";
   results.hidden = true;
   aiBlock.hidden = true;
+
   try {
     const res = await fetch("/api/analyze", {
       method: "POST",
@@ -81,14 +91,21 @@ form.addEventListener("submit", async (e) => {
       body: JSON.stringify({ url })
     });
     const data = await res.json();
+
     results.hidden = false;
     renderHeuristics(data.heuristics);
-    if (data.error) renderAi(null, data.error);
-    else renderAi(data.ai, null);
+
+    if (data.error) {
+      renderAi(null, data.error);
+    } else {
+      renderAi(data.ai, null);
+    }
+
     if (data.heuristics.valid) {
       const level = data.ai?.riskLevel || (data.heuristics.verdict === "high-risk" ? "high" : data.heuristics.verdict === "suspicious" ? "medium" : "low");
       addToHistory(url, level);
     }
+
     status.textContent = "";
   } catch (err) {
     status.textContent = "Scan failed — check the server is running.";

@@ -14,16 +14,27 @@
       <h1>Link Scan</h1>
       <p>Paste a URL. Get an instant structural check, then a reasoned read from Claude.</p>
     </header>
+
     <form class="scanner__form" id="scan-form">
-      <input type="text" id="url-input" placeholder="https://example.com/reset-password" autocomplete="off" spellcheck="false" required />
+      <input
+        type="text"
+        id="url-input"
+        placeholder="https://example.com/reset-password"
+        autocomplete="off"
+        spellcheck="false"
+        required
+      />
       <button type="submit" id="scan-btn">Scan</button>
     </form>
+
     <div class="scanner__status" id="status" aria-live="polite"></div>
+
     <section class="results" id="results" hidden>
       <div class="results__block" id="heuristic-block">
         <h2>Structural check</h2>
         <div class="readout" id="heuristic-readout"></div>
       </div>
+
       <div class="results__block" id="ai-block" hidden>
         <h2>Claude's read</h2>
         <div class="verdict" id="verdict-card">
@@ -33,11 +44,13 @@
         </div>
       </div>
     </section>
+
     <section class="history" id="history" hidden>
       <h2>Recent scans</h2>
       <ul id="history-list"></ul>
     </section>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

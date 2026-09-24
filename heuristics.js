@@ -1,4 +1,8 @@
-// Fast, deterministic red-flag checks for a URL.
+// heuristics.js
+// Fast, deterministic red-flag checks for a URL. Runs before (and alongside)
+// the AI call so obviously bad URLs get an instant verdict without burning
+// an API call, and so the AI has structured signals to reason over.
+
 const SUSPICIOUS_TLDS = new Set([
   "zip", "mov", "top", "xyz", "gq", "tk", "ml", "cf", "work", "click", "loan"
 ]);
@@ -33,7 +37,7 @@ function levenshtein(a, b) {
 
 export function analyzeUrl(rawUrl) {
   const flags = [];
-  let score = 0;
+  let score = 0; // 0 = clean, higher = more suspicious
   let parsed;
 
   try {
@@ -77,7 +81,7 @@ export function analyzeUrl(rawUrl) {
     score += 15;
   }
 
-  if (/@/.test(fullUrl)) {
+  if (/[@]/.test(fullUrl)) {
     flags.push("Contains '@' (can hide real destination)");
     score += 20;
   }
@@ -88,7 +92,7 @@ export function analyzeUrl(rawUrl) {
   }
 
   for (const brand of BRAND_KEYWORDS) {
-    if (hostname.includes(brand)) continue;
+    if (hostname.includes(brand)) continue; // legit case handled below
     const labels = hostname.split(".");
     for (const label of labels) {
       const dist = levenshtein(label, brand);

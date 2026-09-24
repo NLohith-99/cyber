@@ -7,13 +7,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 if (!process.env.ANTHROPIC_API_KEY) {
-  console.warn("\n⚠️  ANTHROPIC_API_KEY is not set. Copy .env.example to .env and add your key.\n");
+  console.warn(
+    "\n⚠️  ANTHROPIC_API_KEY is not set. Copy .env.example to .env and add your key.\n"
+  );
 }
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 app.use(express.json());
-app.use(express.static("."));
+app.use(express.static("public"));
 
 app.post("/api/analyze", async (req, res) => {
   const { url } = req.body;
@@ -24,6 +26,7 @@ app.post("/api/analyze", async (req, res) => {
 
   const heuristics = analyzeUrl(url);
 
+  // Skip the AI call for obviously invalid input — no point spending tokens.
   if (!heuristics.valid) {
     return res.json({ heuristics, ai: null });
   }
@@ -49,7 +52,7 @@ Heuristic flags: ${heuristics.flags.length ? heuristics.flags.join("; ") : "none
       .filter((block) => block.type === "text")
       .map((block) => block.text)
       .join("")
-      .replace(/\`\`\`json|\`\`\`/g, "")
+      .replace(/```json|```/g, "")
       .trim();
 
     let ai;
